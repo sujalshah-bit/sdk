@@ -65,6 +65,12 @@ verify: install-dev  ## install all required tools
 	@uv run ruff format --check kubeflow
 	@uv run ty check kubeflow/hub
 
+.PHONY: format
+format:
+	@echo "Formatting code..."
+	@uv run ruff format .
+	@echo "Done."
+
 .PHONY: uv-venv
 uv-venv:  ## Create uv virtual environment
 	@if [ ! -d "$(VENV_DIR)" ]; then \
