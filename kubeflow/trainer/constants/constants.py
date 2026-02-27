@@ -104,6 +104,9 @@ GPU_MIG_PREFIX = "nvidia.com/mig-"
 # The label for TPU in the container resources.
 TPU_LABEL = "google.com/tpu"
 
+# The label for NPU in the container resources.
+NPU_LABEL = "huawei.com/Ascend910"
+
 # The label key to identify the JobSet name of the Pod.
 JOBSET_NAME_LABEL = "jobset.sigs.k8s.io/jobset-name"
 
