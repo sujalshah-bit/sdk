@@ -41,7 +41,7 @@ def get_container_devices(
     # TODO (andreyvelich): We should discuss how to get container device type.
     # Potentially, we can use the trainer.kubeflow.org/device label from the runtime or
     # node types.
-    # TODO (andreyvelich): Support other resource labels (e.g. NPUs).
+    # TODO (andreyvelich): Support other resource labels.
     if constants.GPU_LABEL in resources.limits:
         device = constants.GPU_LABEL.split("/")[1]
         device_count = resources.limits[constants.GPU_LABEL].actual_instance
@@ -55,6 +55,13 @@ def get_container_devices(
         mig_key = mig_keys[0]
         device = mig_key.split("/")[1]
         device_count = resources.limits[mig_key].actual_instance
+    elif npu_keys := [k for k in resources.limits if k.endswith(constants.NPU_LABEL_SUFFIX)]:
+        if len(npu_keys) > 1:
+            raise ValueError(f"Multiple NPU resource types are not supported yet: {npu_keys}")
+
+        npu_key = npu_keys[0]
+        device = npu_key.rsplit("/", 1)[1]
+        device_count = resources.limits[npu_key].actual_instance
     elif constants.CPU_LABEL in resources.limits:
         device = constants.CPU_LABEL
         device_count = resources.limits[constants.CPU_LABEL].actual_instance

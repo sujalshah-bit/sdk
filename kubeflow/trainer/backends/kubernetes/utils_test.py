@@ -61,6 +61,31 @@ def _build_runtime() -> types.Runtime:
             },
             expected_error=ValueError,
         ),
+        TestCase(
+            name="single NPU limit returns device and count",
+            expected_status=SUCCESS,
+            config={
+                "resources": models.IoK8sApiCoreV1ResourceRequirements(
+                    limits={
+                        "huawei.com/npu": models.IoK8sApimachineryPkgApiResourceQuantity(2),
+                    }
+                )
+            },
+            expected_output=("npu", "2.0"),
+        ),
+        TestCase(
+            name="multiple NPU resource types are not supported",
+            expected_status=FAILED,
+            config={
+                "resources": models.IoK8sApiCoreV1ResourceRequirements(
+                    limits={
+                        "huawei.com/npu": models.IoK8sApimachineryPkgApiResourceQuantity(1),
+                        "vendor.com/npu": models.IoK8sApimachineryPkgApiResourceQuantity(1),
+                    }
+                )
+            },
+            expected_error=ValueError,
+        ),
     ],
 )
 def test_get_container_devices(test_case: TestCase):
